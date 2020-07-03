@@ -1,7 +1,10 @@
 # Libraries
 library(ggplot2)
-# Loading data
-Morelia <- read.csv("~/Documents/Personal/others/COVID_Morelia.tsv", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+# Data taken from CONABIO, Mexico
+# https://conabio.maps.arcgis.com/home/item.html?id=ecfda57c446041429dfe116991282af1
+# Loading parsed data
+Morelia <- read.csv(url("https://raw.githubusercontent.com/hugocarlos/public_scripts/master/COVID_Morelia.tsv"),
+                     header = TRUE, sep = "\t", stringsAsFactors = FALSE)
 # Correcting the time
 Morelia$Time <- 1:nrow(Morelia)
 Morelia$Date <- as.Date(Morelia$Time, origin = "2020-06-16")
@@ -28,4 +31,6 @@ p <- ggplot(Morelia, aes(x = Date)) +
         panel.grid.minor = element_line(size = 0.25, linetype = 'solid',
                                         colour = "white"),
         plot.background = element_rect(fill = "lightblue"))
-
+png("COVID_Morelia.png", width = 700, height = 400, units = "px", res = 100)
+print(p)
+dev.off()
