@@ -5,6 +5,8 @@ library(ggplot2)
 # Loading parsed data
 Morelia <- read.csv(url("https://raw.githubusercontent.com/hugocarlos/public_scripts/master/COVID_Morelia.tsv"),
                      header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+#Morelia <- read.csv("~/Documents/GitHub/public_scripts/COVID_Morelia.tsv",
+#                    header = TRUE, sep = "\t", stringsAsFactors = FALSE)
 # Correcting the time
 Morelia$Time <- 1:nrow(Morelia)
 Morelia$Date <- as.Date(Morelia$Time, origin = "2020-06-16")
