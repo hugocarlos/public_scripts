@@ -23,7 +23,7 @@ p <- ggplot(Morelia, aes(x = Date)) +
   labs(x = "Fecha", y = "Número de casos", colour = "") +
   ggtitle("Casos en Morelia (activos y nuevos)") +
   theme(plot.title = element_text(size=13, face="bold"),
-        legend.position = c(0.14, 0.82),
+        legend.position = c(0.1, 0.82),
         legend.background = element_rect(fill = "lightblue"),
         panel.background = element_rect(fill = "lightblue",
                                         colour = "lightblue",
