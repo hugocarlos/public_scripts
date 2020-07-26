@@ -20,18 +20,15 @@
 # Libraries
 library(tidyverse)
 
-data2 <- read_csv("http://187.191.75.115/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip",
-                  col_names = TRUE, n_max = 10, quote = "\"")
+# Did not work... manually downloaded
+#data2 <- read_csv("http://187.191.75.115/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip",
+#                  col_names = TRUE, n_max = 10, quote = "\"")
 
 #data <- read_csv("~/Documents/Personal/others/datos_abiertos_covid19.zip",
 #                  col_names = TRUE, quote = "\"")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
 data <- read.csv("~/Documents/Personal/others/200725COVID19MEXICO.csv",
                  header = TRUE, quote = "\"", sep = ",")
-
-#temp <- read.table("~/Documents/Personal/others/200723COVID19MEXICO.csv", header = TRUE,
-#                   quote = "\"", sep = ",")
-
 
 
 # Calculating average positivity in the last 7 days
@@ -48,8 +45,11 @@ daily_positivities <- t(sapply(1:tolerance_for_tests, function(x){
 positivity <- sum(daily_positivities[ ,1]) / sum(daily_positivities[ ,2])
 
 # Input values
-una_entidad <- 16
-un_municipio <- 53
+una_entidad <- 9 # CDMX
+un_municipio <- 3 # Coyoacan
+municipality <- "Coyoacan"
+una_entidad <- 16 # Michoacan
+un_municipio <- 53 # Morelia
 una_fecha <- today - 28
 municipality <- "Morelia"
 
@@ -90,12 +90,15 @@ df <- data.frame(Dates = as.Date(names(tabla_estimated)), Cases = tabla_estimate
 #rownames(df) <- NULL
 
 (q <- ggplot(df, aes(x = Dates)) +
-    geom_point(aes(y = Cases, colour = "Inicio de síntomas")) +
-    geom_line(aes(y = Cases, colour = "Inicio de síntomas")) +
+#    geom_point(aes(y = Cases, colour = "Inicio de síntomas")) +
+    geom_bar(stat = "identity", aes(y = Cases, colour = "Inicio de síntomas")) +
+#    geom_line(aes(y = Cases, colour = "Inicio de síntomas")) +
     geom_rect(aes(xmin = Dates[nrow(df) - uncertain_period + 1], xmax = Dates[nrow(df)] + 1,
                   ymin = 0, ymax = (max(Cases) + 2)),
               alpha = 0.03, fill = "tomato") +
-    scale_x_date(date_labels = "%b %d", date_breaks = "3 days") +
+    annotate(geom = "text", x = df$Dates[nrow(df)] - 6, y = (max(df$Cases) - 2),
+             label = "Estos valores pueden aumentar", color = "black") +
+    scale_x_date(date_labels = "%b %d", date_breaks = "2 days") +
     scale_colour_manual(values = "black") +
     labs(x = "Fecha", y = "Número de casos estimados", colour = "") +
     ggtitle(paste0("Casos estimados por fecha de inicio de síntomas en ", municipality)) +
