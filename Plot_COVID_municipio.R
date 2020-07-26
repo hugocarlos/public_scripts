@@ -48,13 +48,20 @@ positivity <- sum(daily_positivities[ ,1]) / sum(daily_positivities[ ,2])
 una_entidad <- 9 # CDMX
 un_municipio <- 3 # Coyoacan
 municipality <- "Coyoacan"
+un_municipio <- 14 # Benito Juarez
+municipality <- "Benito Juárez"
+una_entidad <- 15 # Estado de Mexico
+un_municipio <- 120 # Zumpango
+municipality <- "Zumpango"
 una_entidad <- 16 # Michoacan
 un_municipio <- 53 # Morelia
-una_fecha <- today - 28
+period_plotted <- 28
 municipality <- "Morelia"
 
 # Emptying space
 # rm(data)
+
+una_fecha <- today - period_plotted
 
 # Filtering by municipality, reducing columns
 subdata <- data %>%
@@ -86,23 +93,36 @@ tabla_estimated <- sapply(all_dates, function(x){
 })
 names(tabla_estimated) <- all_dates
 
+# averaging
+cases_means <- sapply(8:(period_plotted - 14), function(x){
+  # x <- 8
+  mean(tabla_estimated[x:(x+6)])
+})
+cases_means_df <- data.frame(Dates = as.Date(names(tabla_estimated[8:(period_plotted - 14)])),
+                             avg_mean = cases_means)
+
 df <- data.frame(Dates = as.Date(names(tabla_estimated)), Cases = tabla_estimated)
 #rownames(df) <- NULL
 
-(q <- ggplot(df, aes(x = Dates)) +
+(q <- ggplot() +
 #    geom_point(aes(y = Cases, colour = "Inicio de síntomas")) +
-    geom_bar(stat = "identity", aes(y = Cases, colour = "Inicio de síntomas")) +
+    geom_bar(stat = "identity", aes(x = df$Dates, y = df$Cases, colour = "Inicio de síntomas")) +
 #    geom_line(aes(y = Cases, colour = "Inicio de síntomas")) +
-    geom_rect(aes(xmin = Dates[nrow(df) - uncertain_period + 1], xmax = Dates[nrow(df)] + 1,
-                  ymin = 0, ymax = (max(Cases) + 2)),
-              alpha = 0.03, fill = "tomato") +
+    geom_point(aes(x = cases_means_df$Dates, y = cases_means_df$avg_mean, colour = "Promedio 7-días")) +
+    geom_line(aes(x = cases_means_df$Dates, y = cases_means_df$avg_mean, colour = "Promedio 7-días")) +
+    geom_rect(aes(xmin = df$Dates[nrow(df) - uncertain_period + 1], xmax = df$Dates[nrow(df)] + 1,
+                  ymin = 0, ymax = (max(df$Cases) + 2)),
+              alpha = 0.3, fill = "tomato") +
     annotate(geom = "text", x = df$Dates[nrow(df)] - 6, y = (max(df$Cases) - 2),
              label = "Estos valores pueden aumentar", color = "black") +
     scale_x_date(date_labels = "%b %d", date_breaks = "2 days") +
-    scale_colour_manual(values = "black") +
+    scale_colour_manual(values = c("black", "gray")) +
     labs(x = "Fecha", y = "Número de casos estimados", colour = "") +
     ggtitle(paste0("Casos estimados por fecha de inicio de síntomas en ", municipality)) +
-    theme(legend.position="none",
+    theme(legend.position = c(0.85, 0.7),
+          legend.title = element_blank(),
+          legend.background = element_blank(),
+          legend.key = element_rect(fill = NULL, color = NULL),
           plot.title = element_text(size=13, face="bold"),
           axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
           panel.background = element_rect(fill = "lightblue",
