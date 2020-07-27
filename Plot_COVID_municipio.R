@@ -55,12 +55,11 @@ un_municipio <- 120 # Zumpango
 municipality <- "Zumpango"
 una_entidad <- 16 # Michoacan
 un_municipio <- 53 # Morelia
-period_plotted <- 28
 municipality <- "Morelia"
 
 # Emptying space
 # rm(data)
-
+period_plotted <- 35
 una_fecha <- today - period_plotted
 
 # Filtering by municipality, reducing columns
@@ -134,7 +133,7 @@ df <- data.frame(Dates = as.Date(names(tabla_estimated)), Cases = tabla_estimate
                                           colour = "white"),
           plot.background = element_rect(fill = "lightblue")))
 
-
 png(ppaste0("COVID_estimados_", municipality, ".png"), width = 700, height = 400, units = "px", res = 100)
 print(p)
 dev.off()
+
