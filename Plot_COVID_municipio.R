@@ -1,5 +1,5 @@
 # 
-# Data: http://187.191.75.115/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip
+# Data: http://epidemiologia.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip
 
 #FECHA_ACTUALIZACION,ID_REGISTRO,ORIGEN,SECTOR,ENTIDAD_UM,SEXO,ENTIDAD_NAC,ENTIDAD_RES,MUNICIPIO_RES,TIPO_PACIENTE,
 #         2020-07-23,     1162e9,     2,     4,        09,   2,         20,         09,          002,            1,
@@ -27,7 +27,7 @@ library(tidyverse)
 #data <- read_csv("~/Documents/Personal/others/datos_abiertos_covid19.zip",
 #                  col_names = TRUE, quote = "\"")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
-data <- read.csv("~/Documents/Personal/others/200725COVID19MEXICO.csv",
+data <- read.csv("~/Documents/Personal/others/200728COVID19MEXICO.csv",
                  header = TRUE, quote = "\"", sep = ",")
 
 
