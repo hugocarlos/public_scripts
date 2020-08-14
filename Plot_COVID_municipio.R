@@ -1,5 +1,5 @@
 # 
-# Data: http://epidemiologia.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip
+# Data: http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip
 
 #FECHA_ACTUALIZACION,ID_REGISTRO,ORIGEN,SECTOR,ENTIDAD_UM,SEXO,ENTIDAD_NAC,ENTIDAD_RES,MUNICIPIO_RES,TIPO_PACIENTE,
 #         2020-07-23,     1162e9,     2,     4,        09,   2,         20,         09,          002,            1,
@@ -21,13 +21,13 @@
 library(tidyverse)
 
 # Did not work... manually downloaded
-#data2 <- read_csv("http://187.191.75.115/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip",
+#data2 <- read_csv("http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip",
 #                  col_names = TRUE, n_max = 10, quote = "\"")
 
 #data <- read_csv("~/Documents/Personal/others/datos_abiertos_covid19.zip",
 #                  col_names = TRUE, quote = "\"")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
-data <- read.csv("~/Documents/Personal/others/200728COVID19MEXICO.csv",
+data <- read.csv("~/Documents/Personal/others/200813COVID19MEXICO.csv",
                  header = TRUE, quote = "\"", sep = ",")
 
 
@@ -50,17 +50,24 @@ un_municipio <- 3 # Coyoacan
 municipality <- "Coyoacan"
 un_municipio <- 14 # Benito Juarez
 municipality <- "Benito Juárez"
+un_municipio <- 11
+municipality <- "Tláhuac"
 una_entidad <- 15 # Estado de Mexico
 un_municipio <- 120 # Zumpango
 municipality <- "Zumpango"
+un_municipio <- 121 # Cuautitlán Izcalli
+municipality <- "Cuautitlán Izcalli"
+un_municipio <- 106 # Toluca
+municipality <- "Toluca"
 una_entidad <- 16 # Michoacan
 un_municipio <- 53 # Morelia
 municipality <- "Morelia"
+un_municipio <- 66
+municipality <- "Páztcuaro"
 
 # Emptying space
-# rm(data)
-period_plotted <- 35
-una_fecha <- today - period_plotted
+period_plotted <- 50 # Number of bars
+una_fecha <- today - period_plotted + 1
 
 # Filtering by municipality, reducing columns
 subdata <- data %>%
@@ -93,34 +100,36 @@ tabla_estimated <- sapply(all_dates, function(x){
 names(tabla_estimated) <- all_dates
 
 # averaging
-cases_means <- sapply(8:(period_plotted - 14), function(x){
-  # x <- 8
-  mean(tabla_estimated[x:(x+6)])
+cases_means <- sapply(7:(period_plotted - 14), function(x){
+  # x <- 7
+  mean(tabla_estimated[(x-6):x])
 })
-cases_means_df <- data.frame(Dates = as.Date(names(tabla_estimated[8:(period_plotted - 14)])),
+cases_means_df <- data.frame(Dates = as.Date(names(tabla_estimated[7:(period_plotted - 14)])),
                              avg_mean = cases_means)
 
 df <- data.frame(Dates = as.Date(names(tabla_estimated)), Cases = tabla_estimated)
 #rownames(df) <- NULL
 
 (q <- ggplot() +
-#    geom_point(aes(y = Cases, colour = "Inicio de síntomas")) +
     geom_bar(stat = "identity", aes(x = df$Dates, y = df$Cases, colour = "Inicio de síntomas")) +
-#    geom_line(aes(y = Cases, colour = "Inicio de síntomas")) +
     geom_point(aes(x = cases_means_df$Dates, y = cases_means_df$avg_mean, colour = "Promedio 7-días")) +
     geom_line(aes(x = cases_means_df$Dates, y = cases_means_df$avg_mean, colour = "Promedio 7-días")) +
-    geom_rect(aes(xmin = df$Dates[nrow(df) - uncertain_period + 1], xmax = df$Dates[nrow(df)] + 1,
+    geom_rect(aes(xmin = df$Dates[nrow(df) - uncertain_period + 1], xmax = df$Dates[nrow(df)] + 0,
                   ymin = 0, ymax = (max(df$Cases) + 2)),
               alpha = 0.3, fill = "tomato") +
-    annotate(geom = "text", x = df$Dates[nrow(df)] - 6, y = (max(df$Cases) - 2),
-             label = "Estos valores pueden aumentar", color = "black") +
+    annotate(geom = "text", x = df$Dates[nrow(df)] - 6, y = (max(df$Cases) - 3),
+             label = "Estos valores", color = "black") +
+    annotate(geom = "text", x = df$Dates[nrow(df)] - 6, y = (max(df$Cases) - 5),
+             label = "pueden aumentar", color = "black") +
     scale_x_date(date_labels = "%b %d", date_breaks = "2 days") +
-    scale_colour_manual(values = c("black", "gray")) +
+    scale_colour_manual(values = c("black", "green4")) +
     labs(x = "Fecha", y = "Número de casos estimados", colour = "") +
     ggtitle(paste0("Casos estimados por fecha de inicio de síntomas en ", municipality)) +
-    theme(legend.position = c(0.85, 0.7),
+#    theme(legend.position = c(0.85, 0.7),
+    theme(legend.position = c(0.15, 0.8),
+          legend.background = element_rect(fill = "lightblue"),
           legend.title = element_blank(),
-          legend.background = element_blank(),
+#          legend.background = element_blank(),
           legend.key = element_rect(fill = NULL, color = NULL),
           plot.title = element_text(size=13, face="bold"),
           axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
