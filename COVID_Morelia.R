@@ -21,11 +21,12 @@ Morelia$Average <- sapply(1:nrow(Morelia), function(x){
 (p <- ggplot(Morelia, aes(x = Date)) +
   geom_point(aes(y = ActiveCases, colour = "Casos activos")) +
   geom_line(aes(y = ActiveCases, colour = "Casos activos")) +
-  scale_x_date(date_labels = "%b %d", date_breaks = "4 days", limits = c(Morelia$Date[3], max(Morelia$Date))) +
-#  xlim(Morelia$Date[3], max(Morelia$Date)) +
-  ylim(-1, max(Morelia$ActiveCases)) +
   geom_bar(stat = "identity", aes(y = NewCases, fill = "Nuevos casos")) +
   geom_line(aes(y = Average, colour = "7-días promedio")) +
+  scale_x_date(date_labels = "%b %d", date_breaks = "4 days",
+               limits = c(Morelia$Date[3], max(Morelia$Date) + 1)) +
+  #xlim(Morelia$Date[3], max(Morelia$Date)) +
+  ylim(-1, max(Morelia$ActiveCases)) +
   scale_colour_manual(values = c("black", "tomato")) +
   scale_fill_manual(values = c("gray60")) +
   labs(x = "Fecha", y = "Número de casos", colour = "") +
