@@ -36,10 +36,14 @@ tolerance_for_tests <- 7
 uncertain_period <- 14
 today <- Sys.Date()
 daily_positivities <- t(sapply(1:tolerance_for_tests, function(x){
-  today_cases <- length(which(data$FECHA_INGRESO == as.character(today - x + 1) &
+  # x <- 1
+  # Counting the positive tests
+  oneday_pos <- length(which(data$FECHA_INGRESO == as.character(today - x + 1) &
                                 data$RESULTADO == 1))
-  today_tests <- length(which(data$FECHA_INGRESO == as.character(today - x + 1)))
-  toReturn <- c(today_cases, today_tests)
+  # Counting the negative tests
+  oneday_neg <- length(which(data$FECHA_INGRESO == as.character(today - x + 1) &
+                               data$RESULTADO == 2))
+  toReturn <- c(oneday_pos, (oneday_pos + oneday_neg))
   return(toReturn)
 }))
 positivity <- sum(daily_positivities[ ,1]) / sum(daily_positivities[ ,2])
