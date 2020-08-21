@@ -29,6 +29,10 @@ library(tidyverse)
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
 data <- read.csv("~/Documents/Personal/others/200819COVID19MEXICO.csv",
                  header = TRUE, quote = "\"", sep = ",")
+catalogoEntidades <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_de_ENTIDADES.tsv", header = TRUE,
+                              sep = "\t")
+catalogoMunicipios <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_MUNICIPIOS.tsv", header = TRUE,
+                               sep = "\t")
 
 # Calculating average positivity in the last 7 days
 tolerance_for_tests <- 7
@@ -48,25 +52,20 @@ daily_positivities <- t(sapply(1:tolerance_for_tests, function(x){
 positivity <- sum(daily_positivities[ ,1]) / sum(daily_positivities[ ,2])
 
 # Input values
-una_entidad <- 9 # CDMX
-un_municipio <- 3 # Coyoacan
-municipality <- "Coyoacan"
-un_municipio <- 14 # Benito Juarez
-municipality <- "Benito Juárez"
-un_municipio <- 11
-municipality <- "Tláhuac"
-una_entidad <- 15 # Estado de Mexico
-un_municipio <- 120 # Zumpango
-municipality <- "Zumpango"
-un_municipio <- 121 # Cuautitlán Izcalli
-municipality <- "Cuautitlán Izcalli"
-un_municipio <- 106 # Toluca
-municipality <- "Toluca"
-una_entidad <- 16 # Michoacan
-un_municipio <- 53 # Morelia
 municipality <- "Morelia"
-un_municipio <- 66
-municipality <- "Páztcuaro"
+
+un_municipio <- which(catalogoMunicipios$MUNICIPIO == toupper(municipality))
+# catalogoMunicipios[un_municipio, ]
+if(length(un_municipio) > 1){
+  print("More than one municipality with this name. Specify the state!")
+#  una_entidad <- "Chihuahua"
+  una_entidad <- catalogoEntidades$CLAVE_ENTIDAD[which(catalogoEntidades$ENTIDAD_FEDERATIVA == toupper(una_entidad))]
+  un_municipio <- catalogoMunicipios$CLAVE_MUNICIPIO[which(catalogoMunicipios$MUNICIPIO == toupper(municipality) &
+                                                           catalogoMunicipios$CLAVE_ENTIDAD == una_entidad)]
+}else{
+  una_entidad <- catalogoMunicipios$CLAVE_ENTIDAD[un_municipio]
+  un_municipio <- catalogoMunicipios$CLAVE_MUNICIPIO[un_municipio]
+}
 
 # Emptying space
 period_plotted <- 50 # Number of bars
