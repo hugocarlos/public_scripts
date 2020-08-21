@@ -1,6 +1,5 @@
 # 
 # Data: http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip
-
 #FECHA_ACTUALIZACION,ID_REGISTRO,ORIGEN,SECTOR,ENTIDAD_UM,SEXO,ENTIDAD_NAC,ENTIDAD_RES,MUNICIPIO_RES,TIPO_PACIENTE,
 #         2020-07-23,     1162e9,     2,     4,        09,   2,         20,         09,          002,            1,
 
@@ -16,6 +15,7 @@
 # SEXO 2: hombre
 # TIPO_PACIENTE: 1 ambulatorio, 2 hospitalizado
 # RESULTADO: 1 positivo, 2 no positivo, 3 resultado pendiente
+# Disease: 1 = Yes, 2 = Not
 
 # Libraries
 library(tidyverse)
@@ -27,9 +27,8 @@ library(tidyverse)
 #data <- read_csv("~/Documents/Personal/others/datos_abiertos_covid19.zip",
 #                  col_names = TRUE, quote = "\"")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
-data <- read.csv("~/Documents/Personal/others/200813COVID19MEXICO.csv",
+data <- read.csv("~/Documents/Personal/others/200819COVID19MEXICO.csv",
                  header = TRUE, quote = "\"", sep = ",")
-
 
 # Calculating average positivity in the last 7 days
 tolerance_for_tests <- 7
