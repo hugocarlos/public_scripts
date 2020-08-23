@@ -146,7 +146,7 @@ df <- data.frame(Dates = as.Date(names(tabla_estimated)), Cases = tabla_estimate
                                           colour = "white"),
           plot.background = element_rect(fill = "lightblue")))
 
-png(ppaste0("COVID_estimados_", municipality, ".png"), width = 700, height = 400, units = "px", res = 100)
+png(paste0("COVID_estimados_", municipality, ".png"), width = 700, height = 400, units = "px", res = 100)
 print(p)
 dev.off()
 
