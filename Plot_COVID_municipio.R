@@ -27,7 +27,7 @@ library(tidyverse)
 #data <- read_csv("~/Documents/Personal/others/datos_abiertos_covid19.zip",
 #                  col_names = TRUE, quote = "\"")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
-data <- read.csv("~/Documents/Personal/others/200819COVID19MEXICO.csv",
+data <- read.csv("~/Documents/Personal/others/200822COVID19MEXICO.csv",
                  header = TRUE, quote = "\"", sep = ",")
 catalogoEntidades <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_de_ENTIDADES.tsv", header = TRUE,
                               sep = "\t")
@@ -52,7 +52,7 @@ daily_positivities <- t(sapply(1:tolerance_for_tests, function(x){
 positivity <- sum(daily_positivities[ ,1]) / sum(daily_positivities[ ,2])
 
 # Input values
-municipality <- "Cherán"
+municipality <- "Morelia"
 
 un_municipio <- which(catalogoMunicipios$MUNICIPIO == toupper(municipality))
 # catalogoMunicipios[un_municipio, ]
