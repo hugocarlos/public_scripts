@@ -27,7 +27,7 @@ library(tidyverse)
 #data <- read_csv("~/Documents/Personal/others/datos_abiertos_covid19.zip",
 #                  col_names = TRUE, quote = "\"")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
-data <- read.csv("~/Documents/Personal/others/200827COVID19MEXICO.csv",
+data <- read.csv("~/Documents/Personal/others/200828COVID19MEXICO.csv",
                  header = TRUE, quote = "\"", sep = ",")
 catalogoEntidades <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_de_ENTIDADES.tsv", header = TRUE,
                               sep = "\t")
