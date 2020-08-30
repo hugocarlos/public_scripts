@@ -23,7 +23,7 @@ Morelia$Average <- sapply(1:nrow(Morelia), function(x){
   geom_line(aes(y = ActiveCases, colour = "Casos activos")) +
   geom_bar(stat = "identity", aes(y = NewCases, fill = "Nuevos casos")) +
   geom_line(aes(y = Average, colour = "7-días promedio")) +
-  scale_x_date(date_labels = "%b %d", date_breaks = "4 days",
+  scale_x_date(date_labels = "%b %d", date_breaks = "3 days",
                limits = c(Morelia$Date[3], max(Morelia$Date) + 1)) +
   #xlim(Morelia$Date[3], max(Morelia$Date)) +
   ylim(-1, max(Morelia$ActiveCases)) +
@@ -38,6 +38,7 @@ Morelia$Average <- sapply(1:nrow(Morelia), function(x){
         panel.background = element_rect(fill = "lightblue",
                                         colour = "lightblue",
                                         size = 0.5, linetype = "solid"),
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
         panel.grid.major = element_line(size = 0.5, linetype = 'solid',
                                         colour = "white"), 
         panel.grid.minor = element_line(size = 0.25, linetype = 'solid',
