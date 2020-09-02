@@ -27,7 +27,7 @@ library(tidyverse)
 #data <- read_csv("~/Documents/Personal/others/datos_abiertos_covid19.zip",
 #                  col_names = TRUE, quote = "\"")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
-data <- read.csv("~/Documents/Personal/others/200831COVID19MEXICO.csv",
+data <- read.csv("~/Documents/Personal/others/200901COVID19MEXICO.csv",
                  header = TRUE, quote = "\"", sep = ",")
 catalogoEntidades <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_de_ENTIDADES.tsv", header = TRUE,
                               sep = "\t")
@@ -52,7 +52,7 @@ daily_positivities <- t(sapply(1:tolerance_for_tests, function(x){
 positivity <- sum(daily_positivities[ ,1]) / sum(daily_positivities[ ,2])
 
 # Input values
-municipality <- "Morelia"
+municipality <- "Lázaro Cárdenas"
 
 un_municipio <- which(catalogoMunicipios$MUNICIPIO == toupper(municipality))
 # catalogoMunicipios[un_municipio, ]
@@ -60,8 +60,9 @@ if(any(!length(un_municipio))){
   print("No municipalities have this name!")
 }else if(length(un_municipio) > 1){
   print("More than one municipality with this name. Specify the state!")
-#  una_entidad <- "Chihuahua"
-  una_entidad <- catalogoEntidades$CLAVE_ENTIDAD[which(catalogoEntidades$ENTIDAD_FEDERATIVA == toupper(una_entidad))]
+#  una_entidad <- "Michoacán"
+  una_entidad <- catalogoEntidades$CLAVE_ENTIDAD[grep(una_entidad, catalogoEntidades$ENTIDAD_FEDERATIVA,
+                                                      ignore.case = TRUE)]
   un_municipio <- catalogoMunicipios$CLAVE_MUNICIPIO[which(catalogoMunicipios$MUNICIPIO == toupper(municipality) &
                                                            catalogoMunicipios$CLAVE_ENTIDAD == una_entidad)]
 }else{
