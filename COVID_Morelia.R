@@ -38,7 +38,7 @@ Morelia$weekend <- extended_vector[1:nrow(Morelia)]
   ggtitle("Casos en Morelia (activos y nuevos)") +
   theme(plot.title = element_text(size=13, face="bold"),
         legend.title = element_blank(),
-        legend.position = c(0.27, 0.8),
+        legend.position = c(0.22, 0.8),
         legend.background = element_rect(fill = "lightblue"),
         panel.background = element_rect(fill = "lightblue",
                                         colour = "lightblue",
