@@ -31,7 +31,7 @@ catalogoEntidades <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_de_ENT
 catalogoMunicipios <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_MUNICIPIOS.tsv", header = TRUE,
                                sep = "\t")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
-data <- read.csv("~/Documents/Personal/others/200926COVID19MEXICO.csv",
+data <- read.csv("~/Documents/Personal/others/200928COVID19MEXICO.csv",
                  header = TRUE, quote = "\"", sep = ",")
 
 # Calculating average positivity in the last 7 days
