@@ -54,6 +54,30 @@ print(p)
 dev.off()
 
 ggplot(Morelia, aes(x = Date)) +
+ geom_bar(stat = "identity", aes(y = NewCases, fill = "New Cases")) +
+ geom_line(aes(y = Average, colour = "7-days average")) +
+ scale_x_date(date_labels = "%b %d", date_breaks = "3 days",
+              limits = c(Morelia$Date[17], max(Morelia$Date) + 1)) +
+ scale_colour_manual(values = c("black", "sienna", "sienna", "orangered")) +
+     scale_fill_manual(values = c("gray60")) +
+     labs(x = "Date", y = "Number of Positive Cases", colour = "") +
+ ggtitle("Cases in Morelia") +
+ theme(plot.title = element_text(size=13, face="bold"),
+       legend.title = element_blank(),
+       legend.position = c(0.12, 0.8),
+       legend.background = element_rect(fill = "lightblue"),
+       panel.background = element_rect(fill = "lightblue",
+                                       colour = "lightblue",
+                                       size = 0.5, linetype = "solid"),
+       axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
+       panel.grid.major = element_line(size = 0.5, linetype = 'solid',
+                                       colour = "white"), 
+       panel.grid.minor = element_line(size = 0.25, linetype = 'solid',
+                                       colour = "white"),
+       plot.background = element_rect(fill = "lightblue"))
+
+
+ggplot(Morelia, aes(x = Date)) +
   geom_line(aes(y = Average, colour = "7-días promedio")) +
   scale_x_date(date_labels = "%b %d", date_breaks = "3 days",
                limits = c(Morelia$Date[3], max(Morelia$Date) + 1)) +
