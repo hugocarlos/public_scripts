@@ -1,21 +1,22 @@
 # 
 # Data: http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip
-#FECHA_ACTUALIZACION,ID_REGISTRO,ORIGEN,SECTOR,ENTIDAD_UM,SEXO,ENTIDAD_NAC,ENTIDAD_RES,MUNICIPIO_RES,TIPO_PACIENTE,
-#         2020-07-23,     1162e9,     2,     4,        09,   2,         20,         09,          002,            1,
-
-#FECHA_INGRESO,FECHA_SINTOMAS, FECHA_DEF,INTUBADO,NEUMONIA,EDAD,NACIONALIDAD,EMBARAZO,HABLA_LENGUA_INDIG,DIABETES,
-#   2020-03-23,    2020-03-22,9999-99-99,      97,       2,  28,           1,      97,                 2,       2,
-
-#EPOC,ASMA,INMUSUPR,HIPERTENSION,OTRA_COM,CARDIOVASCULAR,OBESIDAD,RENAL_CRONICA,TABAQUISMO,OTRO_CASO,RESULTADO,
-#   2,   2,       2,           2,       2,             2,       2,            2,         2,       99,        1,
-
-#MIGRANTE,PAIS_NACIONALIDAD,PAIS_ORIGEN,UCI
-#      99,           México,         99, 97
+#FECHA_ACTUALIZACION ID_REGISTRO ORIGEN SECTOR ENTIDAD_UM SEXO ENTIDAD_NAC ENTIDAD_RES
+#         2020-10-13      071735      2      9         21    2          21          21
+#MUNICIPIO_RES TIPO_PACIENTE FECHA_INGRESO FECHA_SINTOMAS  FECHA_DEF INTUBADO NEUMONIA EDAD
+#          114             1    2020-03-18     2020-03-12 9999-99-99       97        2   75
+#NACIONALIDAD EMBARAZO HABLA_LENGUA_INDIG INDIGENA DIABETES EPOC ASMA INMUSUPR HIPERTENSION
+#           1       97                  2        2        1    2    2        2            2
+#OTRA_COM CARDIOVASCULAR OBESIDAD RENAL_CRONICA TABAQUISMO OTRO_CASO TOMA_MUESTRA
+#       2              1        2             2          2         2            1
+#RESULTADO_LAB CLASIFICACION_FINAL MIGRANTE PAIS_NACIONALIDAD PAIS_ORIGEN UCI
+#            1                   3       99            México          97  97
 
 # SEXO 2: hombre
 # TIPO_PACIENTE: 1 ambulatorio, 2 hospitalizado
-# RESULTADO: 1 positivo, 2 no positivo, 3 resultado pendiente
+# RESULTADO_LAB: 1 positivo, 2 no positivo, 3 resultado pendiente, 4 resultado no adecuado, 97 no aplica
 # Disease: 1 = Yes, 2 = Not
+# CLASIFICACION_FINAL: 1 = associacion epidemiologica, 2 = comite de dictaminacion, 3 = confirmado por laboratorio,
+# 4:7 son no positivos
 
 # Libraries
 library(tidyverse)
@@ -31,7 +32,7 @@ catalogoEntidades <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_de_ENT
 catalogoMunicipios <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_MUNICIPIOS.tsv", header = TRUE,
                                sep = "\t")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
-data <- read.csv("~/Documents/Personal/others/201012COVID19MEXICO.csv",
+data <- read.csv("~/Documents/Personal/others/201013COVID19MEXICO.csv",
                  header = TRUE, quote = "\"", sep = ",")
 
 # Calculating average positivity in the last 7 days
@@ -42,10 +43,10 @@ daily_positivities <- t(sapply(1:tolerance_for_tests, function(x){
   # x <- 1
   # Counting the positive tests
   oneday_pos <- length(which(data$FECHA_INGRESO == as.character(today - x + 1) &
-                                data$RESULTADO == 1))
+                                data$RESULTADO_LAB == 1))
   # Counting the negative tests
   oneday_neg <- length(which(data$FECHA_INGRESO == as.character(today - x + 1) &
-                               data$RESULTADO == 2))
+                               data$RESULTADO_LAB == 2))
   toReturn <- c(oneday_pos, (oneday_pos + oneday_neg))
   return(toReturn)
 }))
@@ -77,7 +78,10 @@ una_fecha <- today - period_plotted + 1
 # Filtering by municipality, reducing columns
 subdata <- data %>%
   filter(MUNICIPIO_RES == un_municipio & ENTIDAD_RES == una_entidad) %>%
-  select(EDAD, RESULTADO, SEXO, TIPO_PACIENTE, FECHA_SINTOMAS)
+  select(EDAD, RESULTADO_LAB, CLASIFICACION_FINAL, SEXO, TIPO_PACIENTE, FECHA_SINTOMAS)
+# Creating a variable for COVID positive by lab test or other
+subdata <- subdata %>%
+  mutate(COVID = ifelse(CLASIFICACION_FINAL < 4, 1, 2))
 # reformatting
 subdata$FECHA_SINTOMAS <- as.Date(subdata$FECHA_SINTOMAS)
 # Filtering by date of symptoms
@@ -86,11 +90,11 @@ subdata_recent <- subdata %>%
 
 # Positive cases
 tabla_pos <- table(subdata_recent %>%
-                     filter(RESULTADO == 1) %>%
+                     filter(COVID == 1) %>%
                      select(FECHA_SINTOMAS))
 # Pending result
 tabla_pend <- table(subdata_recent %>%
-                      filter(RESULTADO == 3) %>%
+                      filter(RESULTADO_LAB == 3) %>%
                       select(FECHA_SINTOMAS))
 
 all_dates <- union(names(tabla_pos), names(tabla_pend))
