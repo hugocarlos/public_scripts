@@ -32,7 +32,7 @@ catalogoEntidades <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_de_ENT
 catalogoMunicipios <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_MUNICIPIOS.tsv", header = TRUE,
                                sep = "\t")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
-data <- read.csv("~/Documents/Personal/others/201017COVID19MEXICO.csv",
+data <- read.csv("~/Documents/Personal/others/201019COVID19MEXICO.csv",
                  header = TRUE, quote = "\"", sep = ",")
 
 # Calculating average positivity in the last 7 days
@@ -128,7 +128,7 @@ df <- data.frame(Dates = as.Date(names(tabla_estimated)), Cases = tabla_estimate
               alpha = 0.3, fill = "tomato") +
     annotate(geom = "text", x = df$Dates[nrow(df)] - 6, y = (max(df$Cases) - 3),
              label = "Estos valores", color = "black") +
-    annotate(geom = "text", x = df$Dates[nrow(df)] - 6, y = (max(df$Cases) - 5),
+    annotate(geom = "text", x = df$Dates[nrow(df)] - 6, y = (max(df$Cases) - 6),
              label = "pueden aumentar", color = "black") +
     scale_x_date(date_labels = "%b %d", date_breaks = "2 days") +
     scale_colour_manual(values = c("black", "green4")) +
