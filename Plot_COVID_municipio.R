@@ -32,7 +32,7 @@ catalogoEntidades <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_de_ENT
 catalogoMunicipios <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_MUNICIPIOS.tsv", header = TRUE,
                                sep = "\t")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
-data <- read.csv("~/Documents/Personal/others/201031COVID19MEXICO.csv",
+data <- read.csv("~/Documents/Personal/others/201110COVID19MEXICO.csv",
                  header = TRUE, quote = "\"", sep = ",")
 
 # Calculating average positivity in the last 7 days
@@ -50,10 +50,10 @@ daily_positivities <- t(sapply(1:tolerance_for_tests, function(x){
   toReturn <- c(oneday_pos, (oneday_pos + oneday_neg))
   return(toReturn)
 }))
-positivity <- sum(daily_positivities[ ,1]) / sum(daily_positivities[ ,2])
+(positivity <- sum(daily_positivities[ ,1]) / sum(daily_positivities[ ,2]))
 
 # Input values
-municipality <- "Morelia"
+municipality <- "Morelia" # "Pátzcuaro" # 
 
 un_municipio <- which(catalogoMunicipios$MUNICIPIO == toupper(municipality))
 # catalogoMunicipios[un_municipio, ]
