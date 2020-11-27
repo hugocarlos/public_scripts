@@ -32,7 +32,7 @@ catalogoEntidades <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_de_ENT
 catalogoMunicipios <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_MUNICIPIOS.tsv", header = TRUE,
                                sep = "\t")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
-data <- read.csv("~/Documents/Personal/others/201122COVID19MEXICO.csv",
+data <- read.csv("~/Documents/Personal/others/201125COVID19MEXICO.csv",
                  header = TRUE, quote = "\"", sep = ",")
 
 # Calculating average positivity in the last 7 days
@@ -53,7 +53,7 @@ daily_positivities <- t(sapply(1:tolerance_for_tests, function(x){
 (positivity <- sum(daily_positivities[ ,1]) / sum(daily_positivities[ ,2]))
 
 # Input values
-municipality <- "Morelia" # "Solidaridad" # "Benito Juárez" #"Pátzcuaro" #"Coyoacán" # "Tacámbaro" # 
+municipality <- "Morelia" # "Álvaro Obregón" # "Solidaridad" # "Benito Juárez" #"Pátzcuaro" #"Coyoacán" #  
 
 un_municipio <- which(catalogoMunicipios$MUNICIPIO == toupper(municipality))
 # catalogoMunicipios[un_municipio, ]
@@ -61,7 +61,7 @@ if(any(!length(un_municipio))){
   print("No municipalities have this name!")
 }else if(length(un_municipio) > 1){
   print("More than one municipality with this name. Specify the state!")
-#  una_entidad <- "Quintana Roo"
+#  una_entidad <- "Quintana Roo" "CIUDAD DE MÉXICO"
   una_entidad <- catalogoEntidades$CLAVE_ENTIDAD[grep(una_entidad, catalogoEntidades$ENTIDAD_FEDERATIVA,
                                                       ignore.case = TRUE)]
   un_municipio <- catalogoMunicipios$CLAVE_MUNICIPIO[which(catalogoMunicipios$MUNICIPIO == toupper(municipality) &
