@@ -29,7 +29,7 @@ Morelia$weekend <- extended_vector[1:nrow(Morelia)]
   geom_bar(stat = "identity", aes(y = NewCases, fill = "Nuevos casos")) +
   geom_line(aes(y = Average, colour = "7-días promedio")) +
   scale_x_date(date_labels = "%b %d", date_breaks = "3 days",
-               limits = c(Morelia$Date[45], max(Morelia$Date) + 1)) +
+               limits = c(Morelia$Date[90], max(Morelia$Date) + 1)) +
   #xlim(Morelia$Date[3], max(Morelia$Date)) +
   ylim(-1, max(Morelia$ActiveCases)) +
   scale_colour_manual(values = c("black", "sienna", "sienna", "orangered")) +
@@ -38,7 +38,7 @@ Morelia$weekend <- extended_vector[1:nrow(Morelia)]
   ggtitle("Casos en Morelia (activos y nuevos)") +
   theme(plot.title = element_text(size = 13, face="bold"),
         legend.title = element_blank(),
-        legend.position = c(0.12, 0.8),
+        legend.position = c(0.12, 0.55),
         legend.background = element_rect(fill = "lightblue"),
         panel.background = element_rect(fill = "lightblue",
                                         colour = "lightblue",
@@ -80,7 +80,7 @@ ggplot(Morelia, aes(x = Date)) +
 ggplot(Morelia, aes(x = Date)) +
   geom_line(aes(y = Average, colour = "7-días promedio")) +
   scale_x_date(date_labels = "%b %d", date_breaks = "5 days",
-               limits = c(Morelia$Date[40], max(Morelia$Date) + 1)) +
+               limits = c(Morelia$Date[50], max(Morelia$Date) + 1)) +
   ggtitle("Casos en Morelia (promedio de 1 semana)") +
   theme(plot.title = element_text(size=13, face="bold"),
         legend.title = element_blank(),
