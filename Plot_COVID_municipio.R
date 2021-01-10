@@ -32,7 +32,7 @@ catalogoEntidades <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_de_ENT
 catalogoMunicipios <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_MUNICIPIOS.tsv", header = TRUE,
                                sep = "\t")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
-data <- read.csv("~/Documents/Personal/others/210101COVID19MEXICO.csv",
+data <- read.csv("~/Documents/Personal/others/210108COVID19MEXICO.csv",
                  header = TRUE, quote = "\"", sep = ",")
 
 # Calculating average positivity in the last 7 days
@@ -135,7 +135,7 @@ df <- data.frame(Dates = as.Date(names(tabla_estimated)), Cases = tabla_estimate
     labs(x = "Fecha", y = "Número de casos estimados", colour = "") +
     ggtitle(paste0("Casos estimados por fecha de inicio de síntomas en ", municipality)) +
 #    theme(legend.position = c(0.85, 0.7),
-    theme(legend.position = c(0.15, 0.8),
+    theme(legend.position = c(0.15, 0.88),
           legend.background = element_rect(fill = "lightblue"),
           legend.title = element_blank(),
 #          legend.background = element_blank(),

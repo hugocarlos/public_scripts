@@ -5,7 +5,8 @@ library(ggplot2)
 # Loading parsed data
 Morelia <- read.csv(url("https://raw.githubusercontent.com/hugocarlos/public_scripts/master/COVID_Morelia.tsv"),
                      header = TRUE, sep = "\t", stringsAsFactors = FALSE)
-Morelia <- read.csv("~/Documents/GitHub/public_scripts/COVID_Morelia.tsv",
+#Morelia <- read.csv("~/Documents/GitHub/public_scripts/COVID_Morelia.tsv",
+Morelia <- read.csv("~/Documents/GitHub/public_scripts/COVID_Morelia_cp.tsv",
                     header = TRUE, sep = "\t", stringsAsFactors = FALSE)
 # Correcting the time
 Morelia$Time <- 1:nrow(Morelia)
@@ -38,7 +39,7 @@ Morelia$weekend <- extended_vector[1:nrow(Morelia)]
   ggtitle("Casos en Morelia (activos y nuevos)") +
   theme(plot.title = element_text(size = 13, face="bold"),
         legend.title = element_blank(),
-        legend.position = c(0.12, 0.55),
+        legend.position = c(0.12, 0.82),
         legend.background = element_rect(fill = "lightblue"),
         panel.background = element_rect(fill = "lightblue",
                                         colour = "lightblue",
@@ -49,7 +50,7 @@ Morelia$weekend <- extended_vector[1:nrow(Morelia)]
         panel.grid.minor = element_line(size = 0.25, linetype = 'solid',
                                         colour = "white"),
         plot.background = element_rect(fill = "lightblue")))
-png("COVID_Morelia.png", width = 700, height = 400, units = "px", res = 100)
+\png("COVID_Morelia.png", width = 700, height = 400, units = "px", res = 100)
 print(p)
 dev.off()
 
