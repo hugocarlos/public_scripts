@@ -32,7 +32,7 @@ catalogoEntidades <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_de_ENT
 catalogoMunicipios <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_MUNICIPIOS.tsv", header = TRUE,
                                sep = "\t")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
-data <- read.csv("~/Documents/Personal/others/210121COVID19MEXICO.csv",
+data <- read.csv("~/Documents/Personal/others/210215COVID19MEXICO.csv",
                  header = TRUE, quote = "\"", sep = ",")
 
 # Calculating average positivity in the last 7 days
@@ -53,7 +53,7 @@ daily_positivities <- t(sapply(1:tolerance_for_tests, function(x){
 (positivity <- sum(daily_positivities[ ,1]) / sum(daily_positivities[ ,2]))
 
 # Input values
-municipality <- "Morelia" # "Coyoacán" # "Álvaro Obregón" # "Querétaro" # "Coyoacán" # "Pátzcuaro" # 
+municipality <- "Morelia" # "Guadalajara" # "Álvaro Obregón" # "Querétaro" # "Coyoacán" # "Pátzcuaro" # 
 
 un_municipio <- which(catalogoMunicipios$MUNICIPIO == toupper(municipality))
 # catalogoMunicipios[un_municipio, ]
@@ -123,12 +123,13 @@ df <- data.frame(Dates = as.Date(names(tabla_estimated)), Cases = tabla_estimate
     geom_bar(stat = "identity", aes(x = df$Dates, y = df$Cases, colour = "Inicio de síntomas")) +
     geom_point(aes(x = cases_means_df$Dates, y = cases_means_df$avg_mean, colour = "Promedio 7-días")) +
     geom_line(aes(x = cases_means_df$Dates, y = cases_means_df$avg_mean, colour = "Promedio 7-días")) +
-    geom_rect(aes(xmin = df$Dates[nrow(df) - uncertain_period + 1], xmax = df$Dates[nrow(df)] + 0,
+#    geom_rect(aes(xmin = df$Dates[nrow(df) - uncertain_period + 1], xmax = df$Dates[nrow(df)] + 0,
+    geom_rect(aes(xmin = df$Dates[nrow(df) - uncertain_period + 2], xmax = today,
                   ymin = 0, ymax = (max(df$Cases) + 2)),
               alpha = 0.3, fill = "tomato") +
-    annotate(geom = "text", x = df$Dates[nrow(df)] - 6, y = (max(df$Cases) - 5),
+    annotate(geom = "text", x = df$Dates[nrow(df)] - 4.5, y = (max(df$Cases) - 5),
              label = "Estos valores", color = "black", size = 3) +
-    annotate(geom = "text", x = df$Dates[nrow(df)] - 6, y = (max(df$Cases) - 10),
+    annotate(geom = "text", x = df$Dates[nrow(df)] - 4.5, y = (max(df$Cases) - 10),
              label = "pueden aumentar", color = "black", size = 3) +
     scale_x_date(date_labels = "%b %d", date_breaks = "2 days") +
     scale_colour_manual(values = c("black", "green4")) +
