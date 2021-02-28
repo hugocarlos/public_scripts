@@ -21,18 +21,14 @@
 # Libraries
 library(tidyverse)
 
-# Did not work... manually downloaded
-#data2 <- read_csv("http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip",
-#                  col_names = TRUE, n_max = 10, quote = "\"")
-
-#data <- read_csv("~/Documents/Personal/others/datos_abiertos_covid19.zip",
-#                  col_names = TRUE, quote = "\"")
+download.file("http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip",
+              "~/Documents/Personal/others/datos_abiertos_covid19.zip")
 catalogoEntidades <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_de_ENTIDADES.tsv", header = TRUE,
                               sep = "\t")
 catalogoMunicipios <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_MUNICIPIOS.tsv", header = TRUE,
                                sep = "\t")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
-data <- read.csv("~/Documents/Personal/others/210223COVID19MEXICO.csv",
+data <- read.csv("~/Documents/Personal/others/210227COVID19MEXICO.csv",
                  header = TRUE, quote = "\"", sep = ",")
 
 # Calculating average positivity in the last 7 days
