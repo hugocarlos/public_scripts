@@ -21,12 +21,12 @@
 # Libraries
 library(tidyverse)
 
-download.file("http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip",
-              "~/Documents/Personal/others/datos_abiertos_covid19.zip")
 catalogoEntidades <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_de_ENTIDADES.tsv", header = TRUE,
                               sep = "\t")
 catalogoMunicipios <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_MUNICIPIOS.tsv", header = TRUE,
                                sep = "\t")
+download.file("http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip",
+              "~/Documents/Personal/others/datos_abiertos_covid19.zip")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
 data <- read.csv("~/Documents/Personal/others/210303COVID19MEXICO.csv", header = TRUE, quote = "\"",
                  sep = ",")
