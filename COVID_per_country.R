@@ -3,6 +3,11 @@
 # Dataset: <https://github.com/hugocarlos/covid-19-data/blob/master/public/data/owid-covid-data.csv>  
 # Explanation on headers: <https://github.com/hugocarlos/covid-19-data/blob/master/public/data/owid-covid-codebook.csv>  
 
+# Dataset from WorldBank with the total population per country in 2019
+download.file("https://github.com/hugocarlos/public_scripts/blob/master/WorldPopulation2019.tsv?raw=true",
+              destfile = "WorldPopulation2019.tsv")
+WorldPopulation <- read.csv("WorldPopulation2019.tsv", sep = "\t", header = TRUE)
+  
 # Function that generates a vector with x-days rolling average for a given country and a given variable
 # USAGE: generate_rolling_avg(subcovid, "France", "new_cases", 7)
 # one_country = "France"; one_variable = "new_cases"; days = 7
@@ -25,6 +30,7 @@ generate_rolling_avg <- function(subcovid, one_country, one_variable, days = 7){
                                   new_variable_avg = variable_means)
 }
 
+# 
 download.file("https://github.com/owid/covid-19-data/blob/master/public/data/owid-covid-data.csv?raw=true",
               "owid-covid-data.txt")
 covid <- read.csv("owid-covid-data.txt")
@@ -82,9 +88,15 @@ one_country <- "Israel"
 # Re-calculating the vector with 7-day rolling average of new COVID-19 cases
 cases_means_df <- generate_rolling_avg(subcovid, one_country, "new_cases", 7)
 # Calculating the percentage of the population fully vaccinated
-# Unfortunately, there is no data for Israel in the datasets that we already have loaded
-# Doing it manually:
-subcovid$share_fully_vaccinated <- subcovid$people_fully_vaccinated * 100 / 9053000
+one_country_tpop <- WorldPopulation$X2019[grep(one_country, WorldPopulation$Country.Name)]
+# Checking that exactly one country was matched
+if(length(one_country_tpop) != 1){
+  print("More than one country retrieved")
+  print(WorldPopulation$Country.Name[grep(one_country, WorldPopulation$Country.Name)])
+}
+# The following currently affects all countries, should not be used for a country other than one_country
+subcovid$share_fully_vaccinated <- subcovid$people_fully_vaccinated * 100 / one_country_tpop
+# subcovid$share_new_vaccinations <- subcovid$new_vaccinations * 100 / one_country_tpop
 
 # Merging cases_means_df to subcovid
 subcovid$new_cases_avg <- NA
@@ -100,6 +112,7 @@ subcovid %>%
   filter(date >= dates_in_2021[1] & date < dates_in_2021[length(dates_in_2021)]) %>%
   ggplot() +
   geom_point(aes(x = date, y = share_fully_vaccinated * 200, colour = "Share of people fully vaccinated")) +
+  #geom_point(aes(x = date, y = share_new_vaccinations * 200, colour = "Share of total vaccinations")) +
   geom_point(aes(x = date, y = new_cases_avg, colour = "New COVID-19 cases (7-day avg)")) +
   scale_y_continuous(name = "Number of cases",
                      sec.axis = sec_axis(~./200, name = "% of total population vaccinated",
@@ -107,6 +120,7 @@ subcovid %>%
                                            paste0(b, "%")
                                           })) +
   xlab("Date") +
+  ggtitle(paste0("COVID-19 Cases and vaccinations in ", one_country)) +
   theme(axis.title.y = element_text(color = "tomato"),
         axis.title.y.right = element_text(color = "cyan4"),
         legend.position = "bottom")
@@ -128,7 +142,7 @@ abline(lm_Israel, col = "red")
 # as reported from February 2021:
 # Selecting values from Febrary to the most recent
 covid_recent <- subcovid %>%
-  filter(date >= as.Date("2021-02-01") - 7)
+  filter(date >= as.Date("2021-02-01") - 7) # Taking 7 days before the value where we expect no NAs
 results <- data.frame(Country = sort(unique(covid_recent$location)), lm_b0 = NA,
                       lm_b1 = NA, Adj_rsquared = NA)
 # Adding the new column
