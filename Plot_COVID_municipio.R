@@ -28,7 +28,7 @@ catalogoMunicipios <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_MUNIC
 download.file("http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip",
               "~/Documents/Personal/others/datos_abiertos_covid19.zip")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
-data <- read.csv("~/Documents/Personal/others/210303COVID19MEXICO.csv", header = TRUE, quote = "\"",
+data <- read.csv("~/Documents/Personal/others/210306COVID19MEXICO.csv", header = TRUE, quote = "\"",
                  sep = ",")
 
 # Calculating average positivity in the last 7 days
