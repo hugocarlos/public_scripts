@@ -28,13 +28,13 @@ catalogoMunicipios <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_MUNIC
 download.file("http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip",
               "~/Documents/Personal/others/datos_abiertos_covid19.zip")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
-data <- read.csv("~/Documents/Personal/others/210306COVID19MEXICO.csv", header = TRUE, quote = "\"",
-                 sep = ",")
+today <- Sys.Date() - 1
+data <- read.csv(paste0("~/Documents/Personal/others/", substr(gsub("-", "", today), 3, 8),
+                        "COVID19MEXICO.csv"), header = TRUE, quote = "\"", sep = ",")
 
 # Calculating average positivity in the last 7 days
 tolerance_for_tests <- 7
 uncertain_period <- 14
-today <- Sys.Date() - 1
 daily_positivities <- t(sapply(1:tolerance_for_tests, function(x){
   # x <- 1
   # Counting the positive tests
