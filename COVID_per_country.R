@@ -96,7 +96,7 @@ if(length(one_country_tpop) != 1){
 }
 # The following currently affects all countries, should not be used for a country other than one_country
 subcovid$share_fully_vaccinated <- subcovid$people_fully_vaccinated * 100 / one_country_tpop
-# subcovid$share_new_vaccinations <- subcovid$new_vaccinations * 100 / one_country_tpop
+subcovid$share_new_vaccinations <- subcovid$new_vaccinations * 100 / one_country_tpop
 
 # Merging cases_means_df to subcovid
 subcovid$new_cases_avg <- NA
@@ -106,16 +106,21 @@ for(i in 1:nrow(cases_means_df)){
                                subcovid$date == cases_means_df$Dates[i])] <-
     cases_means_df$new_variable_avg[i]
 }
+# maximum share of fully vaccinated people
+threshold_fully <- max(subcovid$share_fully_vaccinated[which(subcovid$location == one_country)], na.rm = TRUE)
+# compared to the maximum of number of cases in this period
+threshold_fully <- max(subcovid$new_cases_avg, na.rm = TRUE) / threshold_fully
 
 subcovid %>%
   filter(location == one_country) %>%
   filter(date >= dates_in_2021[1] & date < dates_in_2021[length(dates_in_2021)]) %>%
   ggplot() +
-  geom_point(aes(x = date, y = share_fully_vaccinated * 200, colour = "Share of people fully vaccinated")) +
+  geom_point(aes(x = date, y = share_fully_vaccinated * threshold_fully,
+                 colour = "Share of people fully vaccinated")) +
   #geom_point(aes(x = date, y = share_new_vaccinations * 200, colour = "Share of total vaccinations")) +
   geom_point(aes(x = date, y = new_cases_avg, colour = "New COVID-19 cases (7-day avg)")) +
   scale_y_continuous(name = "Number of cases",
-                     sec.axis = sec_axis(~./200, name = "% of total population vaccinated",
+                     sec.axis = sec_axis(~./threshold_fully, name = "% of total population vaccinated",
                                          labels = function(b){
                                            paste0(b, "%")
                                           })) +
@@ -123,7 +128,42 @@ subcovid %>%
   ggtitle(paste0("COVID-19 Cases and vaccinations in ", one_country)) +
   theme(axis.title.y = element_text(color = "tomato"),
         axis.title.y.right = element_text(color = "cyan4"),
+        legend.title = element_blank(),
         legend.position = "bottom")
+
+
+# Calculating the cummulative share of applied vaccines
+one_country_df <- subcovid[which(subcovid$location == one_country), ]
+#cum_share_vacc <- cumsum(one_country_df$share_new_vaccinations)
+cum_share_vacc <- 0
+for(i in 2:nrow(one_country_df)){
+  # i <- 1
+  to_add <- ifelse(is.na(one_country_df$share_new_vaccinations[i]), 0, one_country_df$share_new_vaccinations[i])
+  cum_share_vacc <- c(cum_share_vacc, cum_share_vacc[length(cum_share_vacc)] + to_add)
+}
+one_country_df$cum_share_vacc <- cum_share_vacc
+# maximum cumulated share of vaccines
+threshold_cumshare <- max(one_country_df$cum_share_vacc)
+# compared to the maximum of number of cases in this period
+threshold_cumshare <- max(one_country_df$new_cases_avg, na.rm = TRUE) / threshold_cumshare
+one_country_df %>%
+  filter(date >= dates_in_2021[1] & date < dates_in_2021[length(dates_in_2021)]) %>%
+  ggplot() +
+  geom_point(aes(x = date, y = cum_share_vacc * threshold_cumshare,
+                 colour = "Administered doses per 100 people")) +
+  geom_point(aes(x = date, y = new_cases_avg, colour = "New COVID-19 cases (7-day avg)")) +
+  scale_y_continuous(name = "Number of cases",
+                     sec.axis = sec_axis(~./threshold_cumshare, name = "% of total population",
+                                         labels = function(b){
+                                           paste0(b, "%")
+                                         })) +
+  xlab("Date") +
+  ggtitle(paste0("COVID-19 Cases and vaccinations in ", one_country)) +
+  theme(axis.title.y = element_text(color = "cyan4"),
+        axis.title.y.right = element_text(color = "tomato"),
+        legend.title = element_blank(),
+        legend.position = "bottom")
+
 
 
 covid_onecountry <- subcovid[which(subcovid$location == "Israel" &
