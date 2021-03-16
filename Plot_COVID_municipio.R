@@ -28,6 +28,8 @@ catalogoMunicipios <- read.csv("~/Documents/GitHub/public_scripts/Catalogo_MUNIC
 download.file("http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip",
               "~/Documents/Personal/others/datos_abiertos_covid19.zip")
 unzip("~/Documents/Personal/others/datos_abiertos_covid19.zip", exdir = "~/Documents/Personal/others/")
+# If the file was downloaded after 10pm and before midnight it is possible that the new file is already
+# available. This possibility is not considered yet.
 today <- Sys.Date() - 1
 data <- read.csv(paste0("~/Documents/Personal/others/", substr(gsub("-", "", today), 3, 8),
                         "COVID19MEXICO.csv"), header = TRUE, quote = "\"", sep = ",")
