@@ -109,7 +109,9 @@ for(i in 1:nrow(cases_means_df)){
 # maximum share of fully vaccinated people
 threshold_fully <- max(subcovid$share_fully_vaccinated[which(subcovid$location == one_country)], na.rm = TRUE)
 # compared to the maximum of number of cases in this period
-threshold_fully <- max(subcovid$new_cases_avg, na.rm = TRUE) / threshold_fully
+threshold_fully <- max(subcovid$new_cases_avg[which(subcovid$location == one_country &
+                                                      subcovid$date >= dates_in_2021[1])],
+                       na.rm = TRUE) / threshold_fully
 
 subcovid %>%
   filter(location == one_country) %>%
@@ -133,7 +135,7 @@ subcovid %>%
 
 
 # Calculating the cummulative share of applied vaccines
-one_country_df <- subcovid[which(subcovid$location == one_country), ]
+one_country_df <- subcovid[which(subcovid$location == one_country & subcovid$date >= dates_in_2021[1]), ]
 #cum_share_vacc <- cumsum(one_country_df$share_new_vaccinations)
 cum_share_vacc <- 0
 for(i in 2:nrow(one_country_df)){
@@ -153,7 +155,7 @@ one_country_df %>%
                  colour = "Administered doses per 100 people")) +
   geom_point(aes(x = date, y = new_cases_avg, colour = "New COVID-19 cases (7-day avg)")) +
   scale_y_continuous(name = "Number of cases",
-                     sec.axis = sec_axis(~./threshold_cumshare, name = "% of total population",
+                     sec.axis = sec_axis(~./threshold_cumshare, name = "Share of population",
                                          labels = function(b){
                                            paste0(b, "%")
                                          })) +
