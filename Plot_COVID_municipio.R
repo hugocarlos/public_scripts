@@ -51,7 +51,7 @@ daily_positivities <- t(sapply(1:tolerance_for_tests, function(x){
 (positivity <- sum(daily_positivities[ ,1]) / sum(daily_positivities[ ,2]))
 
 # Input values
-municipality <- "Morelia" # "Guadalajara" # "Álvaro Obregón" # "Querétaro" # "Coyoacán" # "Pátzcuaro" # 
+municipality <- "Morelia" # "Tangancícuaro" # "Álvaro Obregón" # "Querétaro" # "Coyoacán" # "Pátzcuaro" # 
 
 un_municipio <- which(catalogoMunicipios$MUNICIPIO == toupper(municipality))
 # catalogoMunicipios[un_municipio, ]
