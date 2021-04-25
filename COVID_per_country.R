@@ -5,8 +5,8 @@
 
 # Dataset from WorldBank with the total population per country in 2019
 download.file("https://github.com/hugocarlos/public_scripts/blob/master/WorldPopulation2019.tsv?raw=true",
-              destfile = "WorldPopulation2019.tsv")
-WorldPopulation <- read.csv("WorldPopulation2019.tsv", sep = "\t", header = TRUE)
+              destfile = "~/Documents/Borrar/WorldPopulation2019.tsv")
+WorldPopulation <- read.csv("~/Documents/Borrar/WorldPopulation2019.tsv", sep = "\t", header = TRUE)
   
 # Function that generates a vector with x-days rolling average for a given country and a given variable
 # USAGE: generate_rolling_avg(subcovid, "France", "new_cases", 7)
@@ -32,8 +32,8 @@ generate_rolling_avg <- function(subcovid, one_country, one_variable, days = 7){
 
 # 
 download.file("https://github.com/owid/covid-19-data/blob/master/public/data/owid-covid-data.csv?raw=true",
-              "owid-covid-data.txt")
-covid <- read.csv("owid-covid-data.txt")
+              "~/Documents/Borrar/owid-covid-data.txt")
+covid <- read.csv("~/Documents/Borrar/owid-covid-data.txt")
 # Selecting some columns
 subcovid <- covid %>%
   select(iso_code, location, date, new_cases, new_deaths, new_cases_per_million,
