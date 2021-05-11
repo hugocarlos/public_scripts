@@ -24,6 +24,7 @@ extended_vector <- rep(c("weekday", "weekday", "weekday", "weekend", "weekend", 
 tail(Morelia)
 Morelia$weekend <- extended_vector[1:nrow(Morelia)]
 # Plot
+days_to_plot <- 100
 (p <- ggplot(Morelia, aes(x = Date)) +
 #  geom_point(aes(y = ActiveCases, colour = "Casos activos")) +
   geom_point(aes(y = ActiveCases, colour = weekend)) +
@@ -31,9 +32,9 @@ Morelia$weekend <- extended_vector[1:nrow(Morelia)]
   geom_bar(stat = "identity", aes(y = NewCases, fill = "Nuevos casos")) +
   geom_line(aes(y = Average, colour = "7-días promedio")) +
   scale_x_date(date_labels = "%b %d", date_breaks = "3 days",
-               limits = c(Morelia$Date[200], max(Morelia$Date) + 1)) +
+               limits = c(Morelia$Date[nrow(Morelia) - days_to_plot], max(Morelia$Date) + 1)) +
   #xlim(Morelia$Date[3], max(Morelia$Date)) +
-  ylim(-1, max(Morelia$ActiveCases)) +
+  ylim(-1, max(Morelia$ActiveCases[(nrow(Morelia) - days_to_plot):nrow(Morelia)])) +
   scale_colour_manual(values = c("black", "sienna", "sienna", "orangered")) +
   scale_fill_manual(values = c("gray60")) +
   labs(x = "Fecha", y = "Número de casos", colour = "") +
