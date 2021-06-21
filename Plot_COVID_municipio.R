@@ -165,21 +165,18 @@ data <- read.csv(paste0("~/Documents/Personal/others/", substr(gsub("-", "", tod
 # Calculating average positivity in the last 7 days
 tolerance_for_tests <- 7
 uncertain_period <- 14
+young <- data %>%
+  filter(EDAD < 50)
 daily_positivities <- t(sapply(1:tolerance_for_tests, function(x){
-  # x <- 1
-  # Counting the positive tests
-  oneday_pos <- length(which(data$FECHA_INGRESO == as.character(today - x + 1) &
-                               data$RESULTADO_LAB == 1))
+  oneday_pos <- length(which(young$FECHA_INGRESO == as.character(today - x + 1) &
+                               young$RESULTADO_LAB == 1))
   # Counting the negative tests
-  oneday_neg <- length(which(data$FECHA_INGRESO == as.character(today - x + 1) &
-                               data$RESULTADO_LAB == 2))
+  oneday_neg <- length(which(young$FECHA_INGRESO == as.character(today - x + 1) &
+                               young$RESULTADO_LAB == 2))
   toReturn <- c(oneday_pos, (oneday_pos + oneday_neg))
   return(toReturn)
 }))
 (positivity <- sum(daily_positivities[ ,1]) / sum(daily_positivities[ ,2]))
-
-young <- data %>%
-  filter(EDAD < 50)
 # Creating a variable for COVID positive by lab test or other
 subdata <- young %>%
   mutate(COVID = ifelse(CLASIFICACION_FINAL < 4, 1, 2))
@@ -224,14 +221,14 @@ df <- data.frame(Dates = as.Date(names(tabla_estimated)), Cases = tabla_estimate
     geom_rect(aes(xmin = df$Dates[nrow(df) - uncertain_period + 2], xmax = today,
                   ymin = 0, ymax = (max(df$Cases) + 2)),
               alpha = 0.3, fill = "tomato") +
-    annotate(geom = "text", x = df$Dates[nrow(df)] - 4.5, y = (max(df$Cases) - 5),
+    annotate(geom = "text", x = df$Dates[nrow(df)] - 5.5, y = (max(df$Cases) * 0.95),
              label = "Estos valores", color = "black", size = 3) +
-    annotate(geom = "text", x = df$Dates[nrow(df)] - 4.5, y = (max(df$Cases) - 10),
+    annotate(geom = "text", x = df$Dates[nrow(df)] - 5.5, y = (max(df$Cases) * 0.85),
              label = "pueden aumentar", color = "black", size = 3) +
     scale_x_date(date_labels = "%b %d", date_breaks = "2 days") +
     scale_colour_manual(values = c("black", "green4")) +
     labs(x = "Fecha", y = "Número de casos estimados", colour = "") +
-    ggtitle(paste0("Casos estimados por fecha de inicio de síntomas en menores de 50")) +
+    ggtitle(paste0("Casos estimados por fecha de inicio de síntomas en Mexico, menores de 50")) +
     theme(legend.position = c(0.15, 0.88),
           legend.background = element_rect(fill = "lightblue"),
           legend.title = element_blank(),
