@@ -3,6 +3,8 @@
 # Dataset: <https://github.com/hugocarlos/covid-19-data/blob/master/public/data/owid-covid-data.csv>  
 # Explanation on headers: <https://github.com/hugocarlos/covid-19-data/blob/master/public/data/owid-covid-codebook.csv>  
 
+library(tidyverse)
+
 # Dataset from WorldBank with the total population per country in 2019
 download.file("https://github.com/hugocarlos/public_scripts/blob/master/WorldPopulation2019.tsv?raw=true",
               destfile = "~/Documents/Borrar/WorldPopulation2019.tsv")
@@ -31,6 +33,7 @@ generate_rolling_avg <- function(subcovid, one_country, one_variable, days = 7){
 }
 
 # 
+options(timeout = 200)
 download.file("https://github.com/owid/covid-19-data/blob/master/public/data/owid-covid-data.csv?raw=true",
               "~/Documents/Borrar/owid-covid-data.txt")
 covid <- read.csv("~/Documents/Borrar/owid-covid-data.txt")
@@ -41,6 +44,10 @@ subcovid <- covid %>%
 
 # To date format
 subcovid$date <- as.Date(subcovid$date)
+# The vaccination data can be included with the number of cases, using a 7-day rolling average:
+# Finding all the days from 2021, as they probably contain vaccination data
+# Since data takes time to appear, I skip today
+dates_in_2021 <- seq(as.Date("2021-01-01"), (Sys.Date() - 1), by = "days")
 
 # Setting one country
 one_country <- "France"
@@ -78,11 +85,6 @@ ggplot() +
         legend.title = element_blank(),
         legend.background = element_blank(),
         legend.key = element_rect(fill = NULL, color = NULL))
-
-# The vaccination data can be included with the number of cases, using a 7-day rolling average:
-# Finding all the days from 2021, as they probably contain vaccination data
-# Since data takes time to appear, I skip today
-dates_in_2021 <- seq(as.Date("2021-01-01"), (Sys.Date() - 1), by = "days")
 
 one_country <- "Israel"
 # Re-calculating the vector with 7-day rolling average of new COVID-19 cases
