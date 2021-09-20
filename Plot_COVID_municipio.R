@@ -54,7 +54,7 @@ daily_positivities <- t(sapply(1:tolerance_for_tests, function(x){
 (positivity <- sum(daily_positivities[ ,1]) / sum(daily_positivities[ ,2]))
 
 # Input values
-municipality <- "Morelia" # "Álvaro Obregón" # "Querétaro" # "Coyoacán" # "Pátzcuaro"
+municipality <- "Morelia" # "Coyoacán" # "Benito Juárez" # "Álvaro Obregón" # "Querétaro" # "Pátzcuaro"
 
 un_municipio <- which(catalogoMunicipios$MUNICIPIO == toupper(municipality))
 # catalogoMunicipios[un_municipio, ]
@@ -62,7 +62,7 @@ if(any(!length(un_municipio))){
   print("No municipalities have this name!")
 }else if(length(un_municipio) > 1){
   print("More than one municipality with this name. Specify the state!")
-#  una_entidad <- "CIUDAD DE MÉXICO" "Quintana Roo" 
+#  una_entidad <- "CIUDAD DE MÉXICO" # "Quintana Roo" 
   una_entidad <- catalogoEntidades$CLAVE_ENTIDAD[grep(una_entidad, catalogoEntidades$ENTIDAD_FEDERATIVA,
                                                       ignore.case = TRUE)]
   un_municipio <- catalogoMunicipios$CLAVE_MUNICIPIO[which(catalogoMunicipios$MUNICIPIO == toupper(municipality) &
@@ -116,8 +116,12 @@ cases_means <- sapply(7:(period_plotted - 14), function(x){
 })
 cases_means_df <- data.frame(Dates = as.Date(names(tabla_estimated[7:(period_plotted - 14)])),
                              avg_mean = cases_means)
+population <- 849053 # Morelia
+population <- 614447 # Coyoacan
+# cases_means_df$avg_mean <- cases_means_df$avg_mean*100000/population
 
 df <- data.frame(Dates = as.Date(names(tabla_estimated)), Cases = tabla_estimated)
+# df$Cases <- df$Cases*100000/population
 #rownames(df) <- NULL
 
 (q <- ggplot() +
@@ -159,6 +163,7 @@ dev.off()
 
 # Plot of cases in <50 year old individuals
 library(tidyverse)
+EDAD_lim <- 30
 today <- Sys.Date() - 1
 data <- read.csv(paste0("~/Documents/Personal/others/", substr(gsub("-", "", today), 3, 8),
                         "COVID19MEXICO.csv"), header = TRUE, quote = "\"", sep = ",")
@@ -166,7 +171,7 @@ data <- read.csv(paste0("~/Documents/Personal/others/", substr(gsub("-", "", tod
 tolerance_for_tests <- 7
 uncertain_period <- 14
 young <- data %>%
-  filter(EDAD < 50)
+  filter(EDAD < EDAD_lim)
 daily_positivities <- t(sapply(1:tolerance_for_tests, function(x){
   oneday_pos <- length(which(young$FECHA_INGRESO == as.character(today - x + 1) &
                                young$RESULTADO_LAB == 1))
@@ -228,7 +233,7 @@ df <- data.frame(Dates = as.Date(names(tabla_estimated)), Cases = tabla_estimate
     scale_x_date(date_labels = "%b %d", date_breaks = "2 days") +
     scale_colour_manual(values = c("black", "green4")) +
     labs(x = "Fecha", y = "Número de casos estimados", colour = "") +
-    ggtitle(paste0("Casos estimados por fecha de inicio de síntomas en Mexico, menores de 50")) +
+    ggtitle(paste0("Casos estimados por fecha de inicio de síntomas en Mexico, menores de ", EDAD_lim)) +
     theme(legend.position = c(0.15, 0.88),
           legend.background = element_rect(fill = "lightblue"),
           legend.title = element_blank(),
